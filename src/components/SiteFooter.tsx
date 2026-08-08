@@ -50,7 +50,9 @@ export function SiteFooter() {
             Shorten, manage, and share links with custom aliases, QR codes, temporary expiry,
             analytics, and dashboard controls.
           </p>
+        </div>
 
+        <div className="footerRight">
           <div className="footerSocialLinks">
             {socialLinks.map(({ name, href, icon: Icon }) => (
               <a
@@ -65,16 +67,16 @@ export function SiteFooter() {
               </a>
             ))}
           </div>
-        </div>
 
-        <div className="footerPoweredBy">
-          <span className="footerPoweredByLabel">Powered by</span>
-          <div className="footerPoweredByLogos">
-            {poweredByLogos.map(({ name, src }) => (
-              <span className="footerPoweredByLogo" key={name}>
-                <img src={src} alt={name} />
-              </span>
-            ))}
+          <div className="footerPoweredBy">
+            <span className="footerPoweredByLabel">Powered by</span>
+            <div className="footerPoweredByLogos">
+              {poweredByLogos.map(({ name, src }) => (
+                <span className="footerPoweredByLogo" key={name}>
+                  <img src={src} alt={name} />
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
