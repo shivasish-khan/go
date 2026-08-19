@@ -80,10 +80,7 @@ export function SiteFooter() {
       </div>
 
       <div className="footerBottom">
-        <span>
-          © {new Date().getFullYear() === 2026 ? "2026" : `2026 – ${new Date().getFullYear()}`} Go by
-          17Bytes. All rights reserved.
-        </span>
+        <span>© 2026 Go is a product of 17Bytes. Developed by Shivasish Khan. All rights reserved.</span>
       </div>
     </footer>
   );

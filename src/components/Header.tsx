@@ -56,7 +56,12 @@ export function Header({
 
       <div className="navActions">
         {authLoading ? (
-          <span className="navMuted">Checking...</span>
+          <>
+            <ThemeSwitch theme={theme} onToggle={onToggleTheme} />
+            <button className="primaryButton navButton" disabled>
+              Sign in
+            </button>
+          </>
         ) : isSignedIn ? (
           <>
             <span className="accountPill">{userEmail || "Signed in"}</span>
