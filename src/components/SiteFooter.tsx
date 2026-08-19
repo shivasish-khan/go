@@ -1,10 +1,8 @@
 import logo from "../assets/0.png";
 import razorpayLogo from "../assets/razorpay.svg";
-import paypalLogo from "../assets/paypal.svg";
 
 const poweredByLogos = [
   { name: "Razorpay", src: razorpayLogo },
-  { name: "PayPal", src: paypalLogo },
 ];
 
 function LinkedinMark() {
