@@ -8,6 +8,7 @@ type PricingSectionProps = {
   billingStatusLoaded: boolean;
   currentPlan: BillingStatus | null;
   billingLoadingPlan: string;
+  timezone: string;
   onChoosePlan: (planId: BillingPlan["id"]) => void;
 };
 
@@ -17,6 +18,7 @@ export function PricingSection({
   billingStatusLoaded,
   currentPlan,
   billingLoadingPlan,
+  timezone,
   onChoosePlan,
 }: PricingSectionProps) {
   const showCurrentPlanCard = isSignedIn && billingStatusLoaded;
@@ -47,7 +49,7 @@ export function PricingSection({
           </div>
           <div>
             <strong>Access</strong>
-            <span>{formatAccess(currentPlan?.accessUntil)}</span>
+            <span>{formatAccess(currentPlan?.accessUntil, timezone)}</span>
           </div>
         </div>
       )}

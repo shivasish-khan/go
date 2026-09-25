@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { buildLogoutUrl } from "./auth";
-import wavyBackground from "./assets/wavy.jpg";
 import type { BillingPlan, ShortenResponse } from "./types";
 import { freePermanentLinkLimit, PENDING_PLAN_KEY } from "./constants/misc";
 import { formatAccess } from "./lib/format";
 
 import { useTheme } from "./hooks/useTheme";
+import { useTimezone } from "./hooks/useTimezone";
 import { useToast } from "./hooks/useToast";
 import { useConfirm } from "./hooks/useConfirm";
 import { useGuestShorten } from "./hooks/useGuestShorten";
@@ -36,6 +36,7 @@ import "./styles/index.css";
 function App() {
   const auth = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { timezone, setTimezone } = useTimezone();
   const { toast, showSuccess, showError, dismissToast } = useToast();
   const notify = { showSuccess, showError };
   const { confirmState, confirm, handleConfirm, handleCancel } = useConfirm();
@@ -68,7 +69,7 @@ function App() {
 
   const guest = useGuestShorten(notify, setCreatedLink);
   const linksApi = useLinks(token, isSignedIn, notify);
-  const billing = useBilling(token, isSignedIn, auth.user?.profile.email, startSignIn, notify);
+  const billing = useBilling(token, isSignedIn, auth.user?.profile.email, startSignIn, notify, timezone);
   const analytics = useAnalytics(token, notify);
   const qr = useQrCode(token, notify);
 
@@ -123,13 +124,15 @@ function App() {
     0
   );
   const planName = billing.currentPlan?.planName || "Go Free";
-  const planAccessLabel = formatAccess(billing.currentPlan?.accessUntil);
+  const planAccessLabel = formatAccess(billing.currentPlan?.accessUntil, timezone);
 
   return (
-    <main className={`bitlyShell ${theme}`} style={{ ["--bg-image" as string]: `url(${wavyBackground})` }}>
+    <main className={`bitlyShell ${theme}`}>
       <Header
         theme={theme}
         onToggleTheme={toggleTheme}
+        timezone={timezone}
+        onTimezoneChange={setTimezone}
         authLoading={auth.isLoading}
         isSignedIn={isSignedIn}
         userEmail={auth.user?.profile.email}
@@ -154,7 +157,7 @@ function App() {
 
       {auth.error && <section className="messageBox errorBox">Auth error: {auth.error.message}</section>}
 
-      {createdLink && <CreatedLinkCard link={createdLink} onCopy={copyText} />}
+      {createdLink && <CreatedLinkCard link={createdLink} onCopy={copyText} timezone={timezone} />}
 
       {isSignedIn && (
         <LinkCreatorStudio
@@ -168,6 +171,7 @@ function App() {
           totalClicks={linksApi.stats.totalClicks}
           activeLinks={linksApi.stats.activeLinks}
           loading={linksApi.actionLoading}
+          timezone={timezone}
           onOpenLinkManager={() => setShowLinkManager(true)}
           onCreate={handleCreateStudioLink}
           showError={showError}
@@ -184,6 +188,7 @@ function App() {
           onSearchChange={linksApi.setLinkSearchQuery}
           dashboardLoading={linksApi.dashboardLoading}
           actionLoading={linksApi.actionLoading}
+          timezone={timezone}
           onRefresh={linksApi.loadLinks}
           onCopy={copyText}
           onOpenAnalytics={(code) => {
@@ -206,6 +211,7 @@ function App() {
         billingStatusLoaded={billing.billingStatusLoaded}
         currentPlan={billing.currentPlan}
         billingLoadingPlan={billing.billingLoadingPlan}
+        timezone={timezone}
         onChoosePlan={billing.choosePlan}
       />
 
@@ -239,6 +245,7 @@ function App() {
           visibleClickLimit={analytics.visibleClickLimit}
           upgradeMessage={analytics.analyticsUpgradeMessage}
           clicks={analytics.clicks}
+          timezone={timezone}
           onClose={analytics.closeAnalytics}
         />
       )}

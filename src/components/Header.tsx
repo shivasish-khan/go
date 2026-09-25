@@ -1,10 +1,13 @@
 import { Moon, Sun } from "lucide-react";
 import type { Theme } from "../types";
 import logo from "../assets/0.png";
+import { TimezoneSelect } from "./TimezoneSelect";
 
 type HeaderProps = {
   theme: Theme;
   onToggleTheme: () => void;
+  timezone: string;
+  onTimezoneChange: (value: string) => void;
   authLoading: boolean;
   isSignedIn: boolean;
   userEmail?: string;
@@ -38,6 +41,8 @@ function ThemeSwitch({ theme, onToggle }: { theme: Theme; onToggle: () => void }
 export function Header({
   theme,
   onToggleTheme,
+  timezone,
+  onTimezoneChange,
   authLoading,
   isSignedIn,
   userEmail,
@@ -55,6 +60,8 @@ export function Header({
       </a>
 
       <div className="navActions">
+        <TimezoneSelect timezone={timezone} onChange={onTimezoneChange} />
+
         {authLoading ? (
           <>
             <ThemeSwitch theme={theme} onToggle={onToggleTheme} />

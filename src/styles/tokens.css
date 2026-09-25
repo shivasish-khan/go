@@ -1,7 +1,7 @@
 /* ==========================================================================
    Design tokens — one source of truth for color, type, spacing, and motion.
-   Brand accent (orange/gold) and the wavy hero image are the existing Go
-   identity; everything else is a refined, consistent system around them.
+   Brand accent (orange) is the existing Go identity; --bg-glow gives every
+   page a single quiet accent glow instead of a busy background image.
    ========================================================================== */
 
 :root {
@@ -52,8 +52,9 @@
 .dark {
   color-scheme: dark;
 
-  --bg-base: #08070a;
-  --bg-scrim: linear-gradient(180deg, rgba(6, 5, 8, 0.88) 0%, rgba(6, 5, 8, 0.94) 45%, rgba(6, 5, 8, 0.98) 100%);
+  --bg-base: #09090b;
+  --bg-glow: radial-gradient(900px circle at 50% -8%, rgba(255, 122, 26, 0.16), transparent 60%),
+    radial-gradient(700px circle at 88% 8%, rgba(255, 148, 66, 0.08), transparent 55%);
 
   --surface-glass: rgba(255, 255, 255, 0.055);
   --surface-glass-strong: rgba(255, 255, 255, 0.09);
@@ -74,8 +75,9 @@
 .light {
   color-scheme: light;
 
-  --bg-base: #faf7f2;
-  --bg-scrim: linear-gradient(180deg, rgba(250, 247, 242, 0.9) 0%, rgba(250, 247, 242, 0.96) 45%, rgba(250, 247, 242, 0.99) 100%);
+  --bg-base: #f7f6f8;
+  --bg-glow: radial-gradient(900px circle at 50% -8%, rgba(255, 122, 26, 0.12), transparent 60%),
+    radial-gradient(700px circle at 88% 8%, rgba(255, 148, 66, 0.07), transparent 55%);
 
   --surface-glass: rgba(255, 255, 255, 0.62);
   --surface-glass-strong: rgba(255, 255, 255, 0.82);

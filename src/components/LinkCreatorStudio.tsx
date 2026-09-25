@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Lock } from "lucide-react";
 import type { BillingStatus, LinkMode } from "../types";
 import { formatDate } from "../lib/format";
+import { zonedWallTimeToUtcIso } from "../lib/timezone";
 import { freePermanentLinkLimit, userExpiryOptions } from "../constants/misc";
 import type { CreateLinkPayload } from "../hooks/useLinks";
 import { ExpiryTimePicker } from "./ExpiryTimePicker";
@@ -17,6 +18,7 @@ type LinkCreatorStudioProps = {
   totalClicks: number;
   activeLinks: number;
   loading: boolean;
+  timezone: string;
   onOpenLinkManager: () => void;
   onCreate: (payload: CreateLinkPayload) => Promise<unknown>;
   showError: (text: string) => void;
@@ -35,6 +37,7 @@ export function LinkCreatorStudio({
   totalClicks,
   activeLinks,
   loading,
+  timezone,
   onOpenLinkManager,
   onCreate,
   showError,
@@ -57,13 +60,19 @@ export function LinkCreatorStudio({
     if (customExpiryPeriod === "PM" && hour !== 12) hour += 12;
     if (customExpiryPeriod === "AM" && hour === 12) hour = 0;
 
-    return `${customExpiryDate}T${String(hour).padStart(2, "0")}:${customExpiryMinute}`;
+    const [year, month, day] = customExpiryDate.split("-").map(Number);
+    const minute = Number(customExpiryMinute);
+
+    // The person picked this on their own wall clock, in `timezone`. Convert it
+    // to the matching UTC instant here so the backend — which only ever stores
+    // and compares UTC — gets an unambiguous, already-correct timestamp.
+    return zonedWallTimeToUtcIso(year, month, day, hour, minute, timezone);
   }
 
   function formatCustomExpiryPreview() {
     const value = buildCustomExpiryValue();
     if (!value) return "Select a date to preview the expiry time.";
-    return `Expires ${formatDate(value)}`;
+    return `Expires ${formatDate(value, timezone)}`;
   }
 
   function resetForm() {

@@ -21,7 +21,8 @@ export function useBilling(
   isAuthenticated: boolean,
   userEmail: string | undefined,
   startSignIn: (pendingPlan?: BillingPlan["id"]) => Promise<void>,
-  notify: Notify
+  notify: Notify,
+  timezone: string
 ) {
   const [currentPlan, setCurrentPlan] = useState<BillingStatus | null>(null);
   const [billingStatusLoading, setBillingStatusLoading] = useState(false);
@@ -130,7 +131,7 @@ export function useBilling(
             })) as RazorpayVerifyResponse;
 
             notify.showSuccess(
-              `${verified.planName || "Your plan"} is active. Access: ${formatAccess(verified.accessUntil)}`
+              `${verified.planName || "Your plan"} is active. Access: ${formatAccess(verified.accessUntil, timezone)}`
             );
 
             await loadBillingStatus();

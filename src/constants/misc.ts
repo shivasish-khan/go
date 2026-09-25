@@ -3,6 +3,7 @@ import type { AnalyticsSummary } from "../types";
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const PENDING_PLAN_KEY = "go-pending-plan";
 export const THEME_STORAGE_KEY = "go-theme";
+export const TIMEZONE_STORAGE_KEY = "go-timezone";
 
 export const emptySummary: AnalyticsSummary = {
   totalClicks: 0,

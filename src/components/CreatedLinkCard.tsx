@@ -5,9 +5,10 @@ import { formatDate } from "../lib/format";
 type CreatedLinkCardProps = {
   link: ShortenResponse;
   onCopy: (value: string) => void;
+  timezone: string;
 };
 
-export function CreatedLinkCard({ link, onCopy }: CreatedLinkCardProps) {
+export function CreatedLinkCard({ link, onCopy, timezone }: CreatedLinkCardProps) {
   return (
     <section className="resultBox">
       <div>
@@ -18,7 +19,7 @@ export function CreatedLinkCard({ link, onCopy }: CreatedLinkCardProps) {
         <small>
           {link.type} · {link.status}
           {link.title ? ` · ${link.title}` : ""}
-          {link.expiresAt ? ` · expires ${formatDate(link.expiresAt)}` : ""}
+          {link.expiresAt ? ` · expires ${formatDate(link.expiresAt, timezone)}` : ""}
         </small>
       </div>
 

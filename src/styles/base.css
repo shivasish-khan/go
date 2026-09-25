@@ -58,18 +58,8 @@ ul {
   position: fixed;
   inset: 0;
   z-index: 0;
-  background-image: var(--bg-image);
-  background-size: cover;
-  background-position: center;
-  opacity: 0.5;
-}
-
-.bitlyShell::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  background: var(--bg-scrim);
+  background: var(--bg-glow);
+  pointer-events: none;
 }
 
 .bitlyShell > * {

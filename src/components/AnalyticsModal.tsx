@@ -10,6 +10,7 @@ type AnalyticsModalProps = {
   visibleClickLimit: number | null;
   upgradeMessage: string;
   clicks: ClickItem[];
+  timezone: string;
   onClose: () => void;
 };
 
@@ -40,6 +41,7 @@ export function AnalyticsModal({
   visibleClickLimit,
   upgradeMessage,
   clicks,
+  timezone,
   onClose,
 }: AnalyticsModalProps) {
   return (
@@ -154,7 +156,7 @@ export function AnalyticsModal({
           {clicks.map((click, index) => (
             <article className="clickRow" key={`${click.clickedAt}-${index}`}>
               <div>
-                <strong>{formatDate(click.clickedAt)}</strong>
+                <strong>{formatDate(click.clickedAt, timezone)}</strong>
                 <span>{click.referrer || "Direct"}</span>
               </div>
 

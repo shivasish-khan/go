@@ -1,46 +1,14 @@
-function getOrdinalDay(day: number) {
-  if (day > 3 && day < 21) return `${day}th`;
+import { formatInTimeZone } from "./timezone";
 
-  switch (day % 10) {
-    case 1:
-      return `${day}st`;
-    case 2:
-      return `${day}nd`;
-    case 3:
-      return `${day}rd`;
-    default:
-      return `${day}th`;
-  }
+/** Formats a UTC timestamp from the backend in the given timezone (defaults to UTC). */
+export function formatDate(value?: string | null, timeZone = "UTC") {
+  return formatInTimeZone(value, timeZone);
 }
 
-function padDatePart(value: number) {
-  return String(value).padStart(2, "0");
-}
-
-export function formatDate(value?: string | null) {
-  if (!value) return "Never";
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) return "Invalid date";
-
-  const month = date
-    .toLocaleString("en-US", { month: "long", timeZone: "UTC" })
-    .toLowerCase();
-
-  const day = getOrdinalDay(date.getUTCDate());
-  const year = date.getUTCFullYear();
-  const hours = padDatePart(date.getUTCHours());
-  const minutes = padDatePart(date.getUTCMinutes());
-  const seconds = padDatePart(date.getUTCSeconds());
-
-  return `${day} ${month} ${year} ${hours}:${minutes}:${seconds} UTC`;
-}
-
-export function formatAccess(value?: string) {
+export function formatAccess(value?: string, timeZone = "UTC") {
   if (!value || value === "free") return "Free";
   if (value === "lifetime") return "Lifetime";
-  return formatDate(value);
+  return formatDate(value, timeZone);
 }
 
 export function entriesFromRecord(record: Record<string, number>) {

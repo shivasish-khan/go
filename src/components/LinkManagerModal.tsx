@@ -16,6 +16,7 @@ type LinkManagerModalProps = {
   onSearchChange: (value: string) => void;
   dashboardLoading: boolean;
   actionLoading: boolean;
+  timezone: string;
   onRefresh: () => void;
   onCopy: (value: string) => void;
   onOpenAnalytics: (code: string) => void;
@@ -34,6 +35,7 @@ export function LinkManagerModal({
   onSearchChange,
   dashboardLoading,
   actionLoading,
+  timezone,
   onRefresh,
   onCopy,
   onOpenAnalytics,
@@ -200,7 +202,7 @@ export function LinkManagerModal({
                     <>
                       <p>{getDestination(link)}</p>
                       <div className="linkMetaStack">
-                        <small>{link.expiresAt ? `Expires ${formatDate(link.expiresAt)}` : "Does not expire"}</small>
+                        <small>{link.expiresAt ? `Expires ${formatDate(link.expiresAt, timezone)}` : "Does not expire"}</small>
                         {getNotes(link) && <small className="notesText">{getNotes(link)}</small>}
                       </div>
                     </>
@@ -211,8 +213,8 @@ export function LinkManagerModal({
                   <strong>{link.clickCount}</strong>
                   <span>clicks</span>
                   <small>Type: {link.type}</small>
-                  <small>Expires: {link.expiresAt ? formatDate(link.expiresAt) : "Never"}</small>
-                  <small>Last click: {formatDate(link.lastClickedAt)}</small>
+                  <small>Expires: {link.expiresAt ? formatDate(link.expiresAt, timezone) : "Never"}</small>
+                  <small>Last click: {formatDate(link.lastClickedAt, timezone)}</small>
                 </div>
 
                 <div className="actionCell">

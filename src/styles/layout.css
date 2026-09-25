@@ -91,7 +91,7 @@
 /* ---------- Hero ---------- */
 
 .hero {
-  max-width: 760px;
+  max-width: 640px;
   margin: var(--space-8) auto var(--space-7);
   padding: 0 var(--space-5);
   text-align: center;
@@ -428,6 +428,10 @@
 
   .accountPill {
     display: none;
+  }
+
+  .timezoneSelect select {
+    max-width: 96px;
   }
 
   .settingsHeaderButton span,
