@@ -80,7 +80,7 @@ export function SiteFooter() {
       </div>
 
       <div className="footerBottom">
-        <span>© 2026 Go is a product of 17Bytes. Developed by Shivasish Khan. All rights reserved.</span>
+        <span>Copyright © 2026 Go. All rights reserved.</span>
       </div>
     </footer>
   );
