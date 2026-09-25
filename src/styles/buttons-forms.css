@@ -203,6 +203,8 @@ select {
 
 .statusPill {
   display: inline-flex;
+  align-items: center;
+  gap: 5px;
   width: fit-content;
   padding: 3px 10px;
   border-radius: var(--radius-pill);
@@ -210,6 +212,14 @@ select {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.statusPill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .statusPill.active {

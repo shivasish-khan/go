@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lock } from "lucide-react";
+import { ArrowUpRight, Crown, Infinity as InfinityIcon, Lock, MousePointerClick, Sparkles, TimerReset } from "lucide-react";
 import type { BillingStatus, LinkMode } from "../types";
 import { formatDate } from "../lib/format";
 import { zonedWallTimeToUtcIso } from "../lib/timezone";
@@ -129,17 +129,24 @@ export function LinkCreatorStudio({
 
           <button className="outlineButton premiumHeaderAction" onClick={onOpenLinkManager}>
             Open Links
+            <ArrowUpRight size={14} strokeWidth={2.25} />
           </button>
         </div>
 
         <div className="creatorStudioMetrics">
           <article className="creatorMetricCard primaryMetricCard">
+            <span className="metricIconWrap">
+              <Crown size={14} strokeWidth={2.25} />
+            </span>
             <span>Your plan</span>
             <strong>{planName}</strong>
             <small>{hasPaidPlan ? `${currentPlan?.displayPrice || "Premium"} · ${planAccessLabel}` : "Free workspace"}</small>
           </article>
 
           <article className="creatorMetricCard">
+            <span className="metricIconWrap">
+              <InfinityIcon size={14} strokeWidth={2.25} />
+            </span>
             <span>{hasPaidPlan ? "Premium access" : "Free links left"}</span>
             <strong>{hasPaidPlan ? "Unlimited" : freePermanentLinksLeft}</strong>
             <small>
@@ -150,12 +157,18 @@ export function LinkCreatorStudio({
           </article>
 
           <article className="creatorMetricCard">
+            <span className="metricIconWrap">
+              <TimerReset size={14} strokeWidth={2.25} />
+            </span>
             <span>Temporary links</span>
             <strong>{temporaryManagedLinks}</strong>
             <small>{hasPaidPlan ? "Custom expiry available" : "Free expiry up to 7 days"}</small>
           </article>
 
           <article className="creatorMetricCard">
+            <span className="metricIconWrap">
+              <MousePointerClick size={14} strokeWidth={2.25} />
+            </span>
             <span>Total clicks</span>
             <strong>{totalClicks}</strong>
             <small>{activeLinks} active links</small>
@@ -173,7 +186,10 @@ export function LinkCreatorStudio({
                   className={linkMode === "permanent" ? "creatorModeCard active" : "creatorModeCard"}
                   onClick={() => setLinkMode("permanent")}
                 >
-                  <span>Permanent</span>
+                  <span className="creatorModeCardTop">
+                    <InfinityIcon size={14} strokeWidth={2.25} />
+                    Permanent
+                  </span>
                   <strong>Always-on link</strong>
                   <small>Never expires.</small>
                 </button>
@@ -183,7 +199,10 @@ export function LinkCreatorStudio({
                   className={linkMode === "temporary" ? "creatorModeCard active" : "creatorModeCard"}
                   onClick={() => setLinkMode("temporary")}
                 >
-                  <span>Temporary</span>
+                  <span className="creatorModeCardTop">
+                    <TimerReset size={14} strokeWidth={2.25} />
+                    Temporary
+                  </span>
                   <strong>Time-limited link</strong>
                   <small>Auto-expires after the time you set.</small>
                 </button>
@@ -314,6 +333,7 @@ export function LinkCreatorStudio({
 
             <div className="creatorSubmitPanel">
               <button className="primaryButton premiumCreateButton" disabled={!url || loading} onClick={handleCreate}>
+                <Sparkles size={15} strokeWidth={2.25} />
                 {loading ? "Creating..." : linkMode === "temporary" ? "Create temporary link" : "Create permanent link"}
               </button>
             </div>

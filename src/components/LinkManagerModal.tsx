@@ -1,5 +1,18 @@
 import { useState } from "react";
-import { BarChart3, Copy, Eye, EyeOff, Pencil, QrCode, RefreshCw, Search, Trash2 } from "lucide-react";
+import {
+  BarChart3,
+  Copy,
+  Eye,
+  EyeOff,
+  Link2,
+  MousePointerClick,
+  Pencil,
+  QrCode,
+  RefreshCw,
+  Search,
+  Trash2,
+  Zap,
+} from "lucide-react";
 import type { ShortenResponse } from "../types";
 import { formatDate } from "../lib/format";
 import { getDestination, getNotes, getTitle } from "../lib/linkHelpers";
@@ -76,29 +89,46 @@ export function LinkManagerModal({
   return (
     <Modal onClose={onClose} panelClassName="linkManagerPanel" ariaLabel="Manage your links">
       <div className="dashboardHeader linkManagerTop">
-        <div>
-          <p className="sectionKicker">Link manager</p>
-          <h2>Manage your links</h2>
-          <p className="helperText">
-            Copy, analyze, generate QR codes, edit, pause, reactivate, or delete your managed links.
-          </p>
+        <div className="linkManagerTitleRow">
+          <span className="linkManagerIcon">
+            <Link2 size={19} strokeWidth={2.25} />
+          </span>
+          <div>
+            <p className="sectionKicker">Link manager</p>
+            <h2>Manage your links</h2>
+            <p className="helperText">
+              Copy, analyze, generate QR codes, edit, pause, reactivate, or delete your managed links.
+            </p>
+          </div>
         </div>
       </div>
 
       <section className="statsGrid">
         <article>
+          <span className="statIconWrap">
+            <Link2 size={14} strokeWidth={2.25} />
+          </span>
           <span>Total links</span>
           <strong>{stats.totalLinks}</strong>
         </article>
         <article>
+          <span className="statIconWrap">
+            <MousePointerClick size={14} strokeWidth={2.25} />
+          </span>
           <span>Total clicks</span>
           <strong>{stats.totalClicks}</strong>
         </article>
         <article>
+          <span className="statIconWrap">
+            <Zap size={14} strokeWidth={2.25} />
+          </span>
           <span>Active links</span>
           <strong>{stats.activeLinks}</strong>
         </article>
         <article>
+          <span className="statIconWrap">
+            <EyeOff size={14} strokeWidth={2.25} />
+          </span>
           <span>Inactive links</span>
           <strong>{stats.inactiveLinks}</strong>
         </article>
@@ -142,126 +172,143 @@ export function LinkManagerModal({
           </div>
         ) : (
           <div className="linkTable">
-            <div className="tableHead">
-              <span>Link</span>
-              <span>Destination</span>
-              <span>Performance</span>
-              <span>Actions</span>
-            </div>
+            <p className="linkResultCount">
+              {filteredLinks.length} of {links.length} link{links.length === 1 ? "" : "s"}
+              {searchQuery ? ` matching “${searchQuery}”` : ""}
+            </p>
 
-            {filteredLinks.map((link) => (
-              <article className="linkRow" key={link.code}>
-                <div className="linkCell">
-                  <span className={link.status === "active" ? "statusPill active" : "statusPill inactive"}>
-                    {link.status}
-                  </span>
+            {filteredLinks.map((link) => {
+              const isEditing = editingCode === link.code.toLowerCase();
 
-                  <strong>{getTitle(link)}</strong>
-                  <span className="codeText">{link.code.toLowerCase()}</span>
+              return (
+                <article className="linkRow" key={link.code}>
+                  <div className="linkRowHead">
+                    <div className="linkCell">
+                      <div className="linkCellTop">
+                        <span className={link.status === "active" ? "statusPill active" : "statusPill inactive"}>
+                          {link.status}
+                        </span>
+                        <strong>{getTitle(link)}</strong>
+                        <span className="codeText">/{link.code.toLowerCase()}</span>
+                      </div>
 
-                  <a href={link.shortUrl} target="_blank" rel="noreferrer">
-                    {link.shortUrl}
-                  </a>
-                </div>
-
-                <div className="destinationCell">
-                  {editingCode === link.code.toLowerCase() ? (
-                    <div className="editForm">
-                      <input
-                        value={editingTitle}
-                        onChange={(event) => setEditingTitle(event.target.value)}
-                        placeholder="Title"
-                        maxLength={120}
-                      />
-                      <input
-                        value={editingUrl}
-                        onChange={(event) => setEditingUrl(event.target.value)}
-                        placeholder="https://new-destination.com"
-                      />
-                      <textarea
-                        value={editingNotes}
-                        onChange={(event) => setEditingNotes(event.target.value)}
-                        placeholder="Notes"
-                        maxLength={500}
-                      />
-
-                      <div className="inlineActions">
-                        <button
-                          className="primaryButton smallButton"
-                          disabled={!editingUrl || actionLoading}
-                          onClick={() => saveEditing(link.code)}
-                        >
-                          Save
-                        </button>
-                        <button className="outlineButton smallButton" onClick={cancelEditing}>
-                          Cancel
+                      <div className="linkCellUrlRow">
+                        <a href={link.shortUrl} target="_blank" rel="noreferrer">
+                          {link.shortUrl}
+                        </a>
+                        <button className="miniCopyButton" title="Copy short link" onClick={() => onCopy(link.shortUrl)}>
+                          <Copy size={12} strokeWidth={2.25} />
                         </button>
                       </div>
                     </div>
-                  ) : (
-                    <>
-                      <p>{getDestination(link)}</p>
-                      <div className="linkMetaStack">
-                        <small>{link.expiresAt ? `Expires ${formatDate(link.expiresAt, timezone)}` : "Does not expire"}</small>
-                        {getNotes(link) && <small className="notesText">{getNotes(link)}</small>}
+
+                    <div className="performanceCell">
+                      <strong>{link.clickCount}</strong>
+                      <span>clicks</span>
+                    </div>
+                  </div>
+
+                  <div className="linkRowBody">
+                    {isEditing ? (
+                      <div className="editForm">
+                        <input
+                          value={editingTitle}
+                          onChange={(event) => setEditingTitle(event.target.value)}
+                          placeholder="Title"
+                          maxLength={120}
+                        />
+                        <input
+                          value={editingUrl}
+                          onChange={(event) => setEditingUrl(event.target.value)}
+                          placeholder="https://new-destination.com"
+                        />
+                        <textarea
+                          value={editingNotes}
+                          onChange={(event) => setEditingNotes(event.target.value)}
+                          placeholder="Notes"
+                          maxLength={500}
+                        />
+
+                        <div className="inlineActions">
+                          <button
+                            className="primaryButton smallButton"
+                            disabled={!editingUrl || actionLoading}
+                            onClick={() => saveEditing(link.code)}
+                          >
+                            Save
+                          </button>
+                          <button className="outlineButton smallButton" onClick={cancelEditing}>
+                            Cancel
+                          </button>
+                        </div>
                       </div>
-                    </>
-                  )}
-                </div>
+                    ) : (
+                      <div className="destinationCell">
+                        <p>{getDestination(link)}</p>
+                        <div className="linkMetaStack">
+                          <small>
+                            {link.expiresAt ? `Expires ${formatDate(link.expiresAt, timezone)}` : "Does not expire"}
+                          </small>
+                          {getNotes(link) && <small className="notesText">{getNotes(link)}</small>}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                <div className="performanceCell">
-                  <strong>{link.clickCount}</strong>
-                  <span>clicks</span>
-                  <small>Type: {link.type}</small>
-                  <small>Expires: {link.expiresAt ? formatDate(link.expiresAt, timezone) : "Never"}</small>
-                  <small>Last click: {formatDate(link.lastClickedAt, timezone)}</small>
-                </div>
+                  <div className="linkRowFoot">
+                    <div className="linkRowFootMeta">
+                      <small>Type: {link.type}</small>
+                      <small>Expires: {link.expiresAt ? formatDate(link.expiresAt, timezone) : "Never"}</small>
+                      <small>Last click: {formatDate(link.lastClickedAt, timezone)}</small>
+                    </div>
 
-                <div className="actionCell">
-                  <button className="iconButton" title="Copy" onClick={() => onCopy(link.shortUrl)}>
-                    <Copy size={15} strokeWidth={2.25} />
-                  </button>
-                  <button className="iconButton" title="Analytics" onClick={() => onOpenAnalytics(link.code)}>
-                    <BarChart3 size={15} strokeWidth={2.25} />
-                  </button>
-                  <button className="iconButton" title="QR code" onClick={() => onOpenQr(link.code)}>
-                    <QrCode size={15} strokeWidth={2.25} />
-                  </button>
-                  <button className="iconButton" title="Edit" onClick={() => startEditing(link)}>
-                    <Pencil size={15} strokeWidth={2.25} />
-                  </button>
+                    <div className="actionCell">
+                      <button className="iconButton" title="Copy" onClick={() => onCopy(link.shortUrl)}>
+                        <Copy size={15} strokeWidth={2.25} />
+                      </button>
+                      <button className="iconButton" title="Analytics" onClick={() => onOpenAnalytics(link.code)}>
+                        <BarChart3 size={15} strokeWidth={2.25} />
+                      </button>
+                      <button className="iconButton" title="QR code" onClick={() => onOpenQr(link.code)}>
+                        <QrCode size={15} strokeWidth={2.25} />
+                      </button>
+                      <button className="iconButton" title="Edit" onClick={() => startEditing(link)}>
+                        <Pencil size={15} strokeWidth={2.25} />
+                      </button>
 
-                  {link.status === "active" ? (
-                    <button
-                      className="iconButton"
-                      title="Deactivate"
-                      disabled={actionLoading}
-                      onClick={() => onUpdateStatus(link.code, "inactive")}
-                    >
-                      <EyeOff size={15} strokeWidth={2.25} />
-                    </button>
-                  ) : (
-                    <button
-                      className="iconButton"
-                      title="Reactivate"
-                      disabled={actionLoading}
-                      onClick={() => onUpdateStatus(link.code, "active")}
-                    >
-                      <Eye size={15} strokeWidth={2.25} />
-                    </button>
-                  )}
+                      {link.status === "active" ? (
+                        <button
+                          className="iconButton"
+                          title="Deactivate"
+                          disabled={actionLoading}
+                          onClick={() => onUpdateStatus(link.code, "inactive")}
+                        >
+                          <EyeOff size={15} strokeWidth={2.25} />
+                        </button>
+                      ) : (
+                        <button
+                          className="iconButton"
+                          title="Reactivate"
+                          disabled={actionLoading}
+                          onClick={() => onUpdateStatus(link.code, "active")}
+                        >
+                          <Eye size={15} strokeWidth={2.25} />
+                        </button>
+                      )}
 
-                  <button
-                    className="iconButton iconButtonDanger"
-                    title="Delete"
-                    disabled={actionLoading}
-                    onClick={() => onDeleteRequest(link.code)}
-                  >
-                    <Trash2 size={15} strokeWidth={2.25} />
-                  </button>
-                </div>
-              </article>
-            ))}
+                      <button
+                        className="iconButton iconButtonDanger"
+                        title="Delete"
+                        disabled={actionLoading}
+                        onClick={() => onDeleteRequest(link.code)}
+                      >
+                        <Trash2 size={15} strokeWidth={2.25} />
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
